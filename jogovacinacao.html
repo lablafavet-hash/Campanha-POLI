@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Imunização Fácil - SUS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 min-h-screen flex flex-col items-center justify-between p-4">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl">
+    <!-- Cabeçalho -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-blue-700">💉 Imunização Fácil</h1>
+      <p class="text-gray-600">Campanha do SUS contra a Poliomielite</p>
+      <div class="mt-4">
+        <img src="https://i.imgur.com/ZZX08dG.png"
+             class="w-52 h-32 mx-auto drop-shadow-lg">
+      </div>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div class="w-full bg-gray-200 rounded-full h-3 mb-6">
+      <div id="progress" class="bg-green-500 h-3 rounded-full transition-all duration-500"></div>
+    </div>
+
+    <!-- Tela inicial -->
+    <div id="start" class="text-center">
+      <p class="mb-4 text-gray-700 text-lg">Teste seus conhecimentos sobre a vacinação contra a pólio e ajude o Zé Gotinha! 🎉</p>
+      <button onclick="startQuiz()" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 text-lg animate-bounce">
+        Iniciar Quiz
+      </button>
+    </div>
+
+    <!-- Conteúdo do quiz -->
+    <div id="quiz" class="hidden text-center">
+      <h2 id="question" class="text-xl font-semibold mb-4"></h2>
+      <img id="questionImage" src="" alt="" class="mx-auto mb-4 rounded-lg shadow-md max-h-48">
+      <div id="answers" class="grid grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Resultado final -->
+    <div id="result" class="hidden text-center">
+      <h2 class="text-2xl font-bold mb-4">Resultado</h2>
+      <p id="scoreText" class="mb-4"></p>
+      <button onclick="restartQuiz()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+        Jogar Novamente
+      </button>
+    </div>
+  </div>
+
+  <!-- Rodapé com realização/apoio -->
+  <footer class="mt-8 w-full max-w-4xl text-center">
+    <h3 class="text-gray-600 font-semibold mb-4">Realização e Apoio</h3>
+    <div class="flex justify-center items-center gap-10">
+      <img src="https://i.imgur.com/1JMT6Lm.jpeg" 
+           alt="SUS" class="h-16 drop-shadow-md">
+      <img src="https://i.imgur.com/yXpzHdV.png"
+           alt="Ministério da Saúde" class="h-16 drop-shadow-md">
+    </div>
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        question: "Qual vírus causa a poliomielite?",
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Polio_virus.jpg",
+        answers: ["Poliovírus", "Influenza", "Sarampo", "HIV"],
+        correct: 0
+      },
+      {
+        question: "Qual símbolo é famoso nas campanhas da poliomielite no Brasil?",
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Z%C3%A9_Gotinha.svg",
+        answers: ["Zé Gotinha", "Mickey Mouse", "Super-Homem", "Curupira"],
+        correct: 0
+      },
+      {
+        question: "Qual órgão do Brasil coordena a vacinação contra a pólio?",
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_SUS.png",
+        answers: ["SUS", "ONU", "NASA", "OMS"],
+        correct: 0
+      },
+      {
+        question: "Como a poliomielite é transmitida?",
+        image: "https://cdn.pixabay.com/photo/2020/03/29/16/41/virus-4986010_1280.jpg",
+        answers: ["Água e alimentos contaminados", "Picada de mosquito", "Contato com ar poluído", "Picada de carrapato"],
+        correct: 0
+      },
+      {
+        question: "Qual a principal forma de prevenção da poliomielite?",
+        image: "https://cdn.pixabay.com/photo/2021/06/18/15/15/vaccine-6346630_1280.jpg",
+        answers: ["Vacinação", "Repouso", "Chá de ervas", "Antibióticos"],
+        correct: 0
+      },
+      {
+        question: "A poliomielite pode causar qual complicação grave?",
+        image: "https://cdn.pixabay.com/photo/2017/01/11/11/33/wheelchair-1970443_1280.jpg",
+        answers: ["Paralisia", "Dor de cabeça leve", "Coceira", "Espirro"],
+        correct: 0
+      },
+      {
+        question: "Em que ano o Brasil recebeu o certificado de eliminação da poliomielite?",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Flag_of_Brazil.svg",
+        answers: ["1994", "1980", "2000", "2010"],
+        correct: 0
+      },
+      {
+        question: "Quantas doses da vacina contra a pólio são recomendadas na infância?",
+        image: "https://cdn.pixabay.com/photo/2016/11/29/04/08/baby-1869321_1280.jpg",
+        answers: ["5 doses", "1 dose", "2 doses", "10 doses"],
+        correct: 0
+      },
+      {
+        question: "A vacina contra poliomielite é gratuita no Brasil?",
+        image: "https://cdn.pixabay.com/photo/2017/03/13/22/50/money-2140045_1280.jpg",
+        answers: ["Sim, pelo SUS", "Não, é paga", "Depende da cidade", "Somente em clínicas privadas"],
+        correct: 0
+      },
+      {
+        question: "O que acontece se a vacinação contra a pólio não for mantida?",
+        image: "https://cdn.pixabay.com/photo/2017/01/09/21/28/world-1962914_1280.jpg",
+        answers: ["A doença pode voltar", "Nada acontece", "Aumenta a altura", "Evita outras doenças"],
+        correct: 0
+      }
+    ];
+
+    let selectedQuestions, currentQuestion, score;
+
+    function startQuiz() {
+      document.getElementById("start").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 3);
+      currentQuestion = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = selectedQuestions[currentQuestion];
+      document.getElementById("question").innerText = q.question;
+      document.getElementById("questionImage").src = q.image;
+      document.getElementById("answers").innerHTML = "";
+      q.answers.forEach((ans, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = ans;
+        btn.className = "bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600";
+        btn.onclick = () => checkAnswer(i);
+        document.getElementById("answers").appendChild(btn);
+      });
+      document.getElementById("progress").style.width = `${(currentQuestion / selectedQuestions.length) * 100}%`;
+    }
+
+    function checkAnswer(i) {
+      if (i === selectedQuestions[currentQuestion].correct) score++;
+      currentQuestion++;
+      if (currentQuestion < selectedQuestions.length) {
+        showQuestion();
+      } else {
+        endQuiz();
+      }
+    }
+
+    function endQuiz() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("scoreText").innerText =
+        `Você acertou ${score} de ${selectedQuestions.length} perguntas.\n${score >= 2 ? "🎉 Parabéns, você venceu!" : "😢 Tente novamente!"}`;
+      document.getElementById("progress").style.width = "100%";
+    }
+
+    function restartQuiz() {
+      document.getElementById("result").classList.add("hidden");
+      document.getElementById("start").classList.remove("hidden");
+      document.getElementById("progress").style.width = "0%";
+    }
+  </script>
+</body>
+</html>
